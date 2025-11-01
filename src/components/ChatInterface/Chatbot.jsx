@@ -8,12 +8,22 @@ const Chatbot = () => {
   const [hasStarted, setHasStarted] = useState(false);
   const containerRef = useRef(null);
   const bottomRef = useRef(null);
+  const textareaRef = useRef(null);
 
   useEffect(() => {
     if (hasStarted) {
       bottomRef.current?.scrollIntoView({ behavior: "smooth" });
     }
   }, [messages, hasStarted]);
+
+  // Auto-resize textarea based on content
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+      textareaRef.current.style.height =
+        textareaRef.current.scrollHeight + "px";
+    }
+  }, [input]);
 
   function sendMessage(text) {
     if (!text.trim()) return;
@@ -25,6 +35,11 @@ const Chatbot = () => {
     const userMsg = { id: Date.now(), sender: "user", text };
     setMessages((m) => [...m, userMsg]);
     setInput("");
+
+    // Reset textarea height after sending
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+    }
 
     setTimeout(() => {
       const botReply = {
@@ -93,13 +108,14 @@ const Chatbot = () => {
                       />
                     </svg>
                   </button>
-                  <input
-                    type="text"
+                  <textarea
+                    ref={textareaRef}
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     onKeyDown={handleKeyDown}
                     placeholder="Type your message and press Enter"
-                    className="flex-1 outline-none text-xs sm:text-sm px-2 sm:px-3 py-2"
+                    rows={1}
+                    className="flex-1 outline-none text-xs sm:text-sm px-2 sm:px-3 py-2 resize-none overflow-hidden max-h-32"
                   />
                   <button
                     onClick={() => sendMessage(input)}
@@ -174,13 +190,14 @@ const Chatbot = () => {
                         />
                       </svg>
                     </button>
-                    <input
-                      type="text"
+                    <textarea
+                      ref={textareaRef}
                       value={input}
                       onChange={(e) => setInput(e.target.value)}
                       onKeyDown={handleKeyDown}
                       placeholder="Type your message and press Enter"
-                      className="flex-1 outline-none text-xs sm:text-sm px-2 sm:px-3 py-2"
+                      rows={1}
+                      className="flex-1 outline-none text-xs sm:text-sm px-2 sm:px-3 py-2 resize-none overflow-hidden max-h-32"
                     />
                     <button
                       onClick={() => sendMessage(input)}
