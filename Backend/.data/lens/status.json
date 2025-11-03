@@ -1,0 +1,26 @@
+{
+  "e893bb34-dd97-4bab-a6af-c3c480e9dbe0": {
+    "status": "error",
+    "message": "Unexpected Response: 400 (Bad Request)\nRaw response content:\nb'{\"status\":{\"error\":\"Format error in JSON body: value c20c1569-35e0-4b04-9a13-b5b7b0ea16ec_0 is not a valid point ID, valid values are either an unsigned integer or a UUID\"},\"time\":0.0}'"
+  },
+  "232efd91-5a15-44f9-b3b8-2573b01a7837": {
+    "status": "error",
+    "message": "Unexpected Response: 400 (Bad Request)\nRaw response content:\nb'{\"status\":{\"error\":\"Format error in JSON body: value 650e900e-80d2-44ca-bf00-da8d688faad3_0 is not a valid point ID, valid values are either an unsigned integer or a UUID\"},\"time\":0.0}'"
+  },
+  "1f252003-6264-471d-b17f-55d265ab1188": {
+    "status": "error",
+    "message": "Unexpected Response: 400 (Bad Request)\nRaw response content:\nb'{\"status\":{\"error\":\"Format error in JSON body: value f77d01b7-93f6-4fd0-8315-dbef35e35814_0 is not a valid point ID, valid values are either an unsigned integer or a UUID\"},\"time\":0.0}'"
+  },
+  "7b5bb4fe-caed-4b21-a25a-ff82a03f2399": {
+    "status": "error",
+    "stage": "split",
+    "title": "constitution_of_india.pdf",
+    "total_chunks": 690,
+    "ingested": 0,
+    "percent": 0,
+    "started_at": 1762168732.7171493,
+    "updated_at": 1762168766.5208964,
+    "eta_seconds": null,
+    "message": "Unexpected Response: 400 (Bad Request)\nRaw response content:\nb'{\"status\":{\"error\":\"Format error in JSON body: value 34b18721-b681-48e1-b8ff-83639a1c607b_0 is not a valid point ID, valid values are either an unsigned integer or a UUID\"},\"time\":0.0}'"
+  }
+}
