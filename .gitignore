@@ -1,0 +1,12 @@
+# Ignore environment variable files (secrets)
+# Repo-wide: any .env file in any folder
+**/.env
+**/.env.*
+
+# Keep explicit entry for backend env file
+Backend/.env
+
+# Optionally keep examples tracked (uncomment if you add them)
+#!.env.example
+#!Backend/.env.example
+#!Frontend/.env.example
