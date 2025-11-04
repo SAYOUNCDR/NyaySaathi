@@ -10,3 +10,10 @@ Backend/.env
 #!.env.example
 #!Backend/.env.example
 #!Frontend/.env.example
+
+# Ignore Python virtual environments
+Backend/.venv/
+
+#ignore .data folder indide Backend
+Backend/.data/
+

@@ -9,6 +9,7 @@ import google.generativeai as genai
 
 RoleMsg = Dict[str, str]  # {"role": "system|user|assistant", "content": "..."}
 
+
 class LLMClient:
     def __init__(self):
         desired = (settings.llm_provider or "").lower().strip()
@@ -42,7 +43,16 @@ class LLMClient:
             ok = _init_google() or _init_openai()
 
         if not ok:
-            raise RuntimeError("No usable LLM provider configured (missing API keys for both OpenAI and Google).")
+            # If no provider is configured, fall back to a lightweight local mock provider
+            # This keeps the app usable for development without external API keys
+            import warnings
+
+            warnings.warn(
+                "No LLM API keys found — falling back to local mock LLM for development."
+            )
+            self.provider = "mock"
+            self._mock = True
+            return
 
     def _norm_ids(self, model_id: str) -> List[str]:
         mid = (model_id or "").strip()
@@ -81,7 +91,13 @@ class LLMClient:
                 seen.add(m)
         return out
 
-    def generate(self, messages: List[RoleMsg], temperature: float = 0.2, top_p: float | None = None, max_tokens: int | None = None) -> str:
+    def generate(
+        self,
+        messages: List[RoleMsg],
+        temperature: float = 0.2,
+        top_p: float | None = None,
+        max_tokens: int | None = None,
+    ) -> str:
         if self.provider == "openai":
             resp = self._openai.chat.completions.create(
                 model=self.model,
@@ -92,13 +108,25 @@ class LLMClient:
                 stream=False,
             )
             return resp.choices[0].message.content or ""
+        elif self.provider == "mock":
+            # Simple deterministic mock: echo the last user message with a prefix.
+            user_msgs = [m["content"] for m in messages if m.get("role") == "user"]
+            last = user_msgs[-1] if user_msgs else "(no user message)"
+            return f"[mock reply] This is a placeholder response. You asked: {last}"
         else:
             # Gemini: move system prompts into system_instruction; map assistant->model
-            sys_text = "\n\n".join([m["content"] for m in messages if m.get("role") == "system"]).strip()
+            sys_text = "\n\n".join(
+                [m["content"] for m in messages if m.get("role") == "system"]
+            ).strip()
             chat_msgs = [m for m in messages if m.get("role") != "system"]
+
             def _map_role(r: str) -> str:
                 return "model" if r == "assistant" else "user"
-            contents = [{"role": _map_role(m["role"]), "parts": [m["content"]]} for m in chat_msgs]
+
+            contents = [
+                {"role": _map_role(m["role"]), "parts": [m["content"]]}
+                for m in chat_msgs
+            ]
             gen_cfg = {"temperature": temperature}
             if top_p is not None:
                 gen_cfg["top_p"] = top_p
@@ -107,7 +135,11 @@ class LLMClient:
             last_err = None
             for candidate in self._google_candidates():
                 try:
-                    model = genai.GenerativeModel(candidate, system_instruction=sys_text) if sys_text else genai.GenerativeModel(candidate)
+                    model = (
+                        genai.GenerativeModel(candidate, system_instruction=sys_text)
+                        if sys_text
+                        else genai.GenerativeModel(candidate)
+                    )
                     resp = model.generate_content(contents, generation_config=gen_cfg)
                     # Cache the working model for subsequent calls
                     self.model = candidate
@@ -119,7 +151,13 @@ class LLMClient:
             # If all candidates fail, raise the last error
             raise last_err
 
-    def stream_generate(self, messages: List[RoleMsg], temperature: float = 0.2, top_p: float | None = None, max_tokens: int | None = None) -> Iterable[str]:
+    def stream_generate(
+        self,
+        messages: List[RoleMsg],
+        temperature: float = 0.2,
+        top_p: float | None = None,
+        max_tokens: int | None = None,
+    ) -> Iterable[str]:
         if self.provider == "openai":
             stream = self._openai.chat.completions.create(
                 model=self.model,
@@ -133,13 +171,27 @@ class LLMClient:
                 delta = chunk.choices[0].delta
                 if delta and delta.content:
                     yield delta.content
+        elif self.provider == "mock":
+            # Stream the mock reply in one chunk for compatibility with streaming clients
+            reply = self.generate(
+                messages, temperature=temperature, top_p=top_p, max_tokens=max_tokens
+            )
+            yield reply
+            return
         else:
             # Gemini: move system into system_instruction; map assistant->model
-            sys_text = "\n\n".join([m["content"] for m in messages if m.get("role") == "system"]).strip()
+            sys_text = "\n\n".join(
+                [m["content"] for m in messages if m.get("role") == "system"]
+            ).strip()
             chat_msgs = [m for m in messages if m.get("role") != "system"]
+
             def _map_role(r: str) -> str:
                 return "model" if r == "assistant" else "user"
-            contents = [{"role": _map_role(m["role"]), "parts": [m["content"]]} for m in chat_msgs]
+
+            contents = [
+                {"role": _map_role(m["role"]), "parts": [m["content"]]}
+                for m in chat_msgs
+            ]
             gen_cfg = {"temperature": temperature}
             if top_p is not None:
                 gen_cfg["top_p"] = top_p
@@ -149,8 +201,14 @@ class LLMClient:
             last_err = None
             for candidate in self._google_candidates():
                 try:
-                    model = genai.GenerativeModel(candidate, system_instruction=sys_text) if sys_text else genai.GenerativeModel(candidate)
-                    for ev in model.generate_content(contents, generation_config=gen_cfg, stream=True):
+                    model = (
+                        genai.GenerativeModel(candidate, system_instruction=sys_text)
+                        if sys_text
+                        else genai.GenerativeModel(candidate)
+                    )
+                    for ev in model.generate_content(
+                        contents, generation_config=gen_cfg, stream=True
+                    ):
                         if getattr(ev, "text", None):
                             yield ev.text
                     # Cache working model
