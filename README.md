@@ -90,17 +90,17 @@ Add screenshots in `public/` and reference them here. Placeholder markup is prov
 
 - Landing / Hero UI
 
-![Hero screenshot](/public/screenshots/hero.png)
+![Hero screenshot](Images/hero.png)
 
 - Chat interface (desktop)
 
-![Chat desktop](/public/screenshots/chat-desktop.png)
+![Chat desktop](Images/chat-desktop.png)
 
 - Chat interface (mobile)
 
-![Chat mobile](/public/screenshots/chat-mobile.png)
+![Chat mobile](Images/chat-mobile.png)
 
-Replace the images above with real screenshots. Keep `public/screenshots/` and commit the assets.
+Replace the images above with real screenshots by placing files at `Images/hero.png`, `Images/chat-desktop.png` and `Images/chat-mobile.png` in the repository root (or update paths to where you keep screenshots). Commit the images together with the README so previews render correctly on GitHub.
 
 ---
 
