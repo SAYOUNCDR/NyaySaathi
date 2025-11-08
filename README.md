@@ -1,7 +1,5 @@
 # NyaySaathi — AI Legal Assistant
 
-![NyaySaathi](public/LogoSaathi.svg)
-
 Full documentation for developers and recruiters — a complete overview of the project, architecture, and how to run, test and extend the application.
 
 ---
@@ -39,8 +37,6 @@ The app is intended to demonstrate an end-to-end Retrieval-Augmented Generation 
 - Vector store for semantic search (Qdrant)
 
 ## NyaySaathi — Open Source Legal Assistant
-
-![NyaySaathi](public/LogoSaathi.svg)
 
 This repository is published as an open-source project to help developers and legal-technology enthusiasts build and extend a Retrieval-Augmented Generation (RAG) system tailored for Indian legal content. It includes a React frontend and a FastAPI backend with pluggable vector storage and LLM adapters.
 
@@ -88,19 +84,24 @@ Key goals of the OSS project:
 
 Add screenshots in `public/` and reference them here. Placeholder markup is provided for easy replacement.
 
-- Landing / Hero UI
+-Login page 
+<img width="1311" height="674" alt="LoginPage" src="https://github.com/user-attachments/assets/51c5daa9-dcd9-4e37-895d-84792cf4ceca" />
 
-![Hero screenshot](Images/hero.png)
+- Landing / Hero UI
+<img width="1306" height="677" alt="HomePage" src="https://github.com/user-attachments/assets/19cd41f0-3f2a-4728-bf86-abeb53a78a5e" />
 
 - Chat interface (desktop)
+<img width="1323" height="663" alt="ChatPage" src="https://github.com/user-attachments/assets/56ac5434-5851-402b-8e13-86364e876ffc" />
 
-![Chat desktop](Images/chat-desktop.png)
+<img width="1304" height="671" alt="ExampleChat" src="https://github.com/user-attachments/assets/79bd7029-5e92-4744-8dfe-f10ded21b9fe" />
 
-- Chat interface (mobile)
+- Legal Lense
+<img width="1321" height="671" alt="LeaglLense" src="https://github.com/user-attachments/assets/f1e3279d-534a-4859-9550-2a6ca06fb3fa" />
 
-![Chat mobile](Images/chat-mobile.png)
+- NyayShala
+<img width="1298" height="674" alt="NyaySala" src="https://github.com/user-attachments/assets/f0aa7bd4-7333-446b-8d9a-1417a6d33bc3" />
 
-Replace the images above with real screenshots by placing files at `Images/hero.png`, `Images/chat-desktop.png` and `Images/chat-mobile.png` in the repository root (or update paths to where you keep screenshots). Commit the images together with the README so previews render correctly on GitHub.
+
 
 ---
 
