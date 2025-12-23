@@ -1,4 +1,4 @@
-# NyaySaathi — AI Legal Assistant
+# NyaySaathi- AI Legal Assistant
 
 Full documentation for developers and recruiters — a complete overview of the project, architecture, and how to run, test and extend the application.
 
